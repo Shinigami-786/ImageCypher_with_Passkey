@@ -1,131 +1,115 @@
- # ImageCypher - Secure Image Encryption and Decryption
+# 📸🔐 imageCypher
 
-# Project Overview
-ImageCypher is a Node.js-based application that allows users to securely encrypt and decrypt images using a passkey. The application uses XOR-based encryption and embeds a SHA-256 hash of the passkey for verification during decryption. It provides a simple web interface for users to upload images, enter a passkey, and download the encrypted or decrypted files.
+A secure image encryption and decryption tool built with **Node.js** and **React**.  
+It uses **XOR cipher encryption** with randomly generated keys and verifies key integrity using **SHA-256 hash verification**.  
+Designed to safely share images over potentially insecure platforms like WhatsApp or cloud storage.
 
-# Features
-  - Image Encryption:
-    - Encrypts images using XOR encryption with a user-provided passkey.
-    - Embeds a SHA-256 hash of the passkey for verification.
-    - Outputs the encrypted image as a downloadable .zip file.
-  
-  - Image Decryption:
-    - Verifies the passkey using the embedded hash.
-    - Decrypts the image using the same XOR logic.
-    - Outputs the decrypted image as a downloadable file.
-  
-  - Web Interface:
-    - User-friendly forms for uploading images and entering passkeys.
-    - Dynamic validation to ensure both image and passkey are provided.
-  
-  - File Handling:
-    - Temporary files are cleaned up after processing.
+---
 
-# Technologies Used
- - Backend:
-  - Node.js
-  - Express.js
-  - Multer for file uploads
-  - Crypto for hashing
-  - Adm-Zip for creating zip files
- 
- - Frontend:
-  - EJS for templating
-  - HTML, CSS, and JavaScript for the user interface
+## 📌 Features
 
-# Installation
-## Prerequisites
- - Node.js installed on your system.
-## Steps
- 1. Clone the repository:
-    ```
-    git clone https://github.com/bishal1289/ImageCypher_with_Passkey.git
-    cd ImageCypher_with_Passkey
-    ```
-2. Install dependencies:
+- 📷 Encrypt images using XOR cipher
+- 🔑 Generate Base64-encoded encryption keys
+- 📝 Generate and store SHA-256 hash for key verification
+- 🖥️ Drag-and-drop user interface
+- 🌙 Dark mode toggle support
+- 📦 Automatic download of encrypted image, key, and hash as ZIP
+- ✅ Key hash verification before decryption
+- 🧹 Secure cleanup by deleting hash file after decryption
+
+---
+
+## 📽️ Why imageCypher?
+
+While messaging apps like WhatsApp offer end-to-end encryption for messages and images during transit, once files are downloaded to a device or shared via other platforms, their security can be compromised.
+
+### imageCypher ensures:
+
+- The image is securely encrypted before sending.
+- Only the intended recipient with the correct key can decrypt it.
+- The integrity of the key is verified before decryption using a SHA-256 hash.
+- No residual hash files are left after decryption.
+
+---
+
+## 📂 Project Structure
+
+/backend ├── encrypt.js └── decrypt.js
+
+/frontend └── src/ ├── components/ └── App.js └── styles/
+
+/uploads └── (encrypted images, keys, hashes)
+
+README.md package.json
+
+---
+
+## ⚙️ How it Works
+
+### Encryption
+
+- Upload an image.
+- A random key (same size as image data) is generated.
+- Image is encrypted with XOR cipher.
+- Key is Base64-encoded and saved.
+- SHA-256 hash of key is generated and saved.
+
+### Decryption
+
+- Encrypted image and key are uploaded.
+- SHA-256 hash is recomputed from the key.
+- Hash is compared with the stored hash.
+- If matched, image is decrypted.
+- Hash file is deleted after successful decryption.
+
+---
+
+## 📦 Installation
+
+Follow the steps below to set up and run `imageCypher` locally:
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/Shinigami-786/ImageCypher_with_Passkey.git
+   cd imageCypher
    ```
+
+2. Install backend dependencies
+   ```bash
+   cd backend
    npm install
    ```
-3. Start the server:
+   
+3. Install frontend dependencies
+   ```bash
+   cd ../frontend
+   npm install
    ```
-    npm start
-   ```
-4. Open your browser and navigate to
-   ```
-   http://localhost:3000
-   ```
-# Usage
- - Encrypt an Image
-    1. Go to the Encrypt Image section on the homepage.
-    2. Upload an image file.
-    3. Enter a passkey.
-    4. Click the Encrypt button.
-    5. Download the encrypted .zip file.
-     
- - Decrypt an Image
-    1. Go to the Decrypt Image section on the homepage.
-    2. Upload the encrypted image file.
-    3. Enter the same passkey used during encryption.
-    4. Click the Decrypt button.
-    5. Download the decrypted image file.
 
-# Project Structure
-```
- imageCypher/
-├── public/                 # Static files (CSS, JS, images)
-│   ├── scripts/
-│   │   └── main.js         # Client-side JavaScript
-│   ├── styles/
-│   │   └── style.css       # Custom styles
-├── uploads/                # Temporary storage for uploaded files
-├── views/                  # EJS templates
-│   └── index.ejs           # Main HTML template
-├── server.js               # Main server-side application
-├── package.json            # Project metadata and dependencies
-└── README.md               # Project documentation
-```
-# Code Explanation
-## Key Functions
-1. xorEncryptDecrypt(data, passkey):
-  - Performs XOR-based encryption and decryption.
-  - Symmetric operation: the same function is used for both encryption and     decryption.
+---
 
-2. generateHash(passkey):
-  - Generates a SHA-256 hash of the passkey for verification during 
-    decryption.
+## 🚀 Usage
 
-3. Routes:
- - GET /:
-   - Serves the homepage with encryption and decryption forms.
- - POST /encrypt:
-   - Handles image encryption.
-   - Combines the passkey hash and encrypted data into a single file.
-   - Sends the encrypted file as a .zip download.
- - POST /decrypt:
-   - Handles image decryption.
-   - Verifies the passkey hash before decrypting the image.
-   - Sends the decrypted image as a download.
+- Start backend server.
+- Start frontend React app.
+- Use drag-and-drop UI to encrypt or decrypt images.
+- Download encrypted files, key, and hash as ZIP.
+- Share encrypted image and key separately.
 
-# Security Considerations
- - XOR Encryption:
-  - While XOR encryption is simple and fast, it is not secure for real-   
-    world applications. This project is for educational purposes only.
- - Passkey Hashing:
-  - A SHA-256 hash of the passkey is embedded in the encrypted file to 
-    ensure the correct passkey is used during decryption.
- - File Cleanup:
-  - Temporary files are deleted after processing to prevent unauthorized 
-    access.
+---
 
-# Future Improvements
- - Add support for stronger encryption algorithms (e.g., AES).
- - Implement user authentication for added security.
- - Allow users to customize the output file name.
- - Add error handling for unsupported file types.
+## 🛡️ Security Note
 
-# Contributing
-Contributions are welcome! Feel free to open issues or submit pull requests to improve the project.
+This tool provides **application-level encryption and integrity checking**.  
+While XOR cipher is simple, combining it with proper key management and hash verification significantly improves the safety of image sharing.
 
-# Snapshot
+---
 
-![Screenshot (165)](https://github.com/user-attachments/assets/5f74c273-e066-459b-8378-d32d7de4d991)
+## ⭐️ Support
+
+If you like this project, give it a ⭐️ and consider contributing!
+
+
+
+
